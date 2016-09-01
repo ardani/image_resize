@@ -16,7 +16,7 @@ if (!isset($_GET['image']))
     exit();
 }
 
-$image_file = $_GET['image'];
+$image_file = ".".$_GET['image'];
 $image_width = array_key_exists('width',$_GET) ? $_GET['width'] : null;
 $image_height = array_key_exists('height',$_GET) ? $_GET['height'] : null;
 if (is_null($image_height) && is_null($image_width)) {
