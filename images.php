@@ -16,7 +16,7 @@ if (!isset($_GET['image']))
     exit();
 }
 
-$image_file = ".".$_GET['image'];
+$image_file = $_GET['image'];
 $image_width = array_key_exists('width',$_GET) ? $_GET['width'] : null;
 $image_height = array_key_exists('height',$_GET) ? $_GET['height'] : null;
 if (is_null($image_height) && is_null($image_width)) {
@@ -35,10 +35,15 @@ switch( $file_extension ) {
     default:
 }
 
-$img = Image::cache(function($image) use ($image_file,$image_width,$image_height) {
-    $image->make($image_file)->resize($image_width, $image_height, function ($constraint) {
-        $constraint->aspectRatio();
-    });;
-});
-header('Content-type: ' . $ctype);
-echo $img;
+try {
+    $img = Image::cache(function ($image) use ($image_file, $image_width, $image_height) {
+        $image->make($image_file)
+            ->resize($image_width, $image_height, function ($constraint) {
+                $constraint->aspectRatio();
+            });;
+    });
+    header('Content-type: ' . $ctype);
+    echo $img;
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
